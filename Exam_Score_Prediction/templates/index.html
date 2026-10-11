@@ -1,0 +1,196 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Exam Score Prediction</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #eef2f7;
+            padding: 25px;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #1d4ed8;
+            text-align: center;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        input, select, button {
+            box-sizing: border-box;
+            width: 100%;
+            padding: 11px;
+            margin-top: 7px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            background: white;
+            font-size: 15px;
+        }
+
+        button {
+            background: #1d4ed8;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 22px;
+        }
+
+        .result {
+            background: #dcfce7;
+            color: #166534;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 12px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <h1>Exam Score Prediction System</h1>
+    <p>Enter student details to predict the expected exam score.</p>
+
+    <form method="POST">
+        <div class="grid">
+
+            <div>Age
+                <input type="number" name="age" min="1"
+                       value="{{ request.form.get('age', '20') }}" required>
+            </div>
+
+            <div>Gender
+                <select name="gender" required>
+                    {% for item in gender_options %}
+                    <option value="{{ item }}"
+                    {% if request.form.get('gender', gender_options[0]) == item %}selected{% endif %}>
+                    {{ item }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>Course
+                <select name="course" required>
+                    {% for item in course_options %}
+                    <option value="{{ item }}"
+                    {% if request.form.get('course', course_options[0]) == item %}selected{% endif %}>
+                    {{ item }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>Study Hours
+                <input type="number" name="study_hours" min="0" step="any"
+                       value="{{ request.form.get('study_hours', '4') }}" required>
+            </div>
+
+            <div>Class Attendance (%)
+                <input type="number" name="class_attendance"
+                       min="0" max="100" step="any"
+                       value="{{ request.form.get('class_attendance', '80') }}" required>
+            </div>
+
+            <div>Internet Access
+                <select name="internet_access" required>
+                    {% for item in internet_options %}
+                    <option value="{{ item }}"
+                    {% if request.form.get('internet_access', internet_options[0]) == item %}selected{% endif %}>
+                    {{ item }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>Sleep Hours
+                <input type="number" name="sleep_hours" min="0" max="24"
+                       step="any" value="{{ request.form.get('sleep_hours', '7') }}" required>
+            </div>
+
+            <div>Sleep Quality
+                <select name="sleep_quality" required>
+                    {% for item in sleep_quality_options %}
+                    <option value="{{ item }}"
+                    {% if request.form.get('sleep_quality', sleep_quality_options[0]) == item %}selected{% endif %}>
+                    {{ item }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>Study Method
+                <select name="study_method" required>
+                    {% for item in study_method_options %}
+                    <option value="{{ item }}"
+                    {% if request.form.get('study_method', study_method_options[0]) == item %}selected{% endif %}>
+                    {{ item }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>Facility Rating
+                <select name="facility_rating" required>
+                    {% for item in facility_options %}
+                    <option value="{{ item }}"
+                    {% if request.form.get('facility_rating', facility_options[0]) == item %}selected{% endif %}>
+                    {{ item }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>Exam Difficulty
+                <select name="exam_difficulty" required>
+                    {% for item in difficulty_options %}
+                    <option value="{{ item }}"
+                    {% if request.form.get('exam_difficulty', difficulty_options[0]) == item %}selected{% endif %}>
+                    {{ item }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+        </div>
+
+        <button type="submit">Predict Exam Score</button>
+    </form>
+
+    {% if prediction is not none %}
+    <div class="result">
+        <h2>Predicted Exam Score</h2>
+        <h2>{{ prediction }} / 100</h2>
+    </div>
+    {% endif %}
+
+    {% if error %}
+    <div class="error">{{ error }}</div>
+    {% endif %}
+
+</div>
+</body>
+</html>
